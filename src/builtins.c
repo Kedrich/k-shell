@@ -50,13 +50,15 @@ int k_shell_help(char **args) {
     printf("  %s--- Welcome to K-SHELL ---%s\n", COLOR_YELLOW, COLOR_RESET);
     printf("  Type program names and arguments, and hit enter.\n\n");
     
-    printf("  %sBuilt-in Commands:%s\n", COLOR_GREEN, COLOR_RESET);
     printf("  %s%-10s%s : Change current directory\n", COLOR_CYAN, "cd", COLOR_RESET);
     printf("  %s%-10s%s : Exit the shell\n", COLOR_CYAN, "exit", COLOR_RESET);
     printf("  %s%-10s%s : Show this help menu\n", COLOR_CYAN, "help", COLOR_RESET);
     printf("  %s%-10s%s : Clear the terminal screen\n", COLOR_CYAN, "clear", COLOR_RESET);
     printf("  %s%-10s%s : List environment variables\n", COLOR_CYAN, "env", COLOR_RESET);
     printf("  %s%-10s%s : Show current path\n", COLOR_CYAN, "pwd", COLOR_RESET);
+    printf("  %s%-10s%s : Print text to the screen\n", COLOR_CYAN, "echo", COLOR_RESET);
+    printf("  %s%-10s%s : Show current username\n", COLOR_CYAN, "whoami", COLOR_RESET);
+    printf("  %s%-10s%s : Identify command type\n", COLOR_CYAN, "type", COLOR_RESET);
     printf("\n");
     return 1;
 }
@@ -90,6 +92,57 @@ int k_shell_pwd(char **args) {
         printf("%s\n", cwd);
     } else {
         perror("k-shell");
+    }
+    return 1;
+}
+
+int k_shell_echo(char **args) {
+    // args[0] is "echo", so we start at args[1]
+    int i = 1;
+    while (args[i] != NULL) {
+        printf("%s", args[i]);
+        
+        // If there is another argument coming, print a space
+        if (args[i + 1] != NULL) {
+            printf(" ");
+        }
+        i++;
+    }
+    printf("\n");
+    return 1;
+}
+
+int k_shell_whoami(char **args) {
+    // getenv("USER") gets the username from the OS
+    char *user = getenv("USER");
+    if (user != NULL) {
+        printf("%s\n", user);
+    } else {
+        printf("Unknown user\n");
+    }
+    return 1;
+}
+
+int k_shell_type(char **args) {
+    if (args[1] == NULL) {
+        printf("type: expected argument\n");
+        return 1;
+    }
+
+    // Check against our own built-ins
+    if (strcmp(args[1], "cd") == 0 ||
+        strcmp(args[1], "exit") == 0 ||
+        strcmp(args[1], "help") == 0 ||
+        strcmp(args[1], "clear") == 0 ||
+        strcmp(args[1], "env") == 0 ||
+        strcmp(args[1], "pwd") == 0 ||
+        strcmp(args[1], "echo") == 0 ||
+        strcmp(args[1], "whoami") == 0 ||
+        strcmp(args[1], "type") == 0) {
+            printf("%s is a shell builtin\n", args[1]);
+    } 
+    else {
+        printf("%s is /usr/bin/%s\n", args[1], args[1]); // Assuming external for now
     }
     return 1;
 }

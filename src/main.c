@@ -54,6 +54,15 @@ int main(void) {
         else if (strcmp(args[0], "pwd") == 0) {
             status = k_shell_pwd(args);
         }
+        else if (strcmp(args[0], "echo") == 0) {
+            status = k_shell_echo(args);
+        }
+        else if (strcmp(args[0], "whoami") == 0) {
+            status = k_shell_whoami(args);
+        }
+        else if (strcmp(args[0], "type") == 0) {
+            status = k_shell_type(args);
+        }
         else {
             pid_t pid = fork();
             if (pid == 0) {
