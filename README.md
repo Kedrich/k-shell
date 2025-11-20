@@ -57,12 +57,13 @@ Designed to explore core Operating System concepts including process creation, m
     ./k-shell
     ```
 
-## 🧠 Learning Outcomes
-This project was built to understand the low-level mechanics of a shell, specifically:
-* **System Calls:** Understanding how `fork` and `exec` work together to create processes.
-* **Memory:** Managing stack-allocated buffers (Phase 1).
-* **String Manipulation:** Parsing raw C strings using `strtok` and pointers.
-* **Process Control:** Handling parent/child process states.
+## 🧠 Learning Objectives
+The primary goal of this project is to demystify Operating System internals by building them from scratch.
+**Core Objectives:**
+* **To understand System Calls:** specifically how `fork`, `exec`, and `wait` interact with the kernel.
+* **To practice Low-Level String Parsing:** handling raw C strings without high-level abstractions.
+* **To master Process Management:** managing the lifecycle of child processes and signals.
+* **To explore Memory Management:** (Upcoming in Phase 2) transitioning from stack to heap allocation.
 
 ## 🗺️ Roadmap
 - [x] **Phase 1:** Basic Execution & Built-ins (Completed)
