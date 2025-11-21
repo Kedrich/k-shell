@@ -18,5 +18,10 @@ int k_shell_kfetch(char **args);
 int k_shell_touch(char **args);
 int k_shell_rm(char **args);
 int k_shell_calc(char **args);
+int k_shell_cat(char **args);
+int k_shell_cp(char **args);
+int k_shell_mv(char **args);
+int k_shell_mkdir(char **args);
+int k_shell_rmdir(char **args);
 
 #endif

@@ -53,7 +53,9 @@ int k_shell_help(char **args) {
         printf("  %-10s %-10s %-10s %-10s\n", "cd", "exit", "help", "clear");
         printf("  %-10s %-10s %-10s %-10s\n", "env", "pwd", "echo", "whoami");
         printf("  %-10s %-10s %-10s %-10s\n", "type", "export", "unset", "mkcd");
-        printf("  %-10s %-10s %-10s %-10s\n", "kfetch", "touch", "rm", "calc");
+        printf("  %-10s %-10s %-10s %-10s\n", "kfetch", "touch", "rm", "rmdir");
+        printf("  %-10s %-10s %-10s %-10s\n", "cat", "cp", "mv", "mkdir");
+        printf("  %-10s", "calc");
         printf("\n");
         return 1;
     }
@@ -147,6 +149,33 @@ int k_shell_help(char **args) {
         printf("%sPurpose:%s  Perform basic arithmetic operations.\n", COLOR_YELLOW, COLOR_RESET);
         printf("%sUsage:%s    calc <num1> <operator> <num2>\n", COLOR_GREEN, COLOR_RESET);
         printf("%sExample:%s  calc 10 + 5\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "cat") == 0) {
+        printf("%sCommand:%s  cat\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Output the content of a file to the terminal.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    cat <filename>\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "cp") == 0) {
+        printf("%sCommand:%s  cp\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Copy a file from source to destination.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    cp <source> <destination>\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "mv") == 0) {
+        printf("%sCommand:%s  mv\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Move or rename a file.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    mv <source> <destination>\n", COLOR_GREEN, COLOR_RESET);
+        printf("%sExample:%s  mv file.txt new_folder/file.txt\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "mkdir") == 0) {
+        printf("%sCommand:%s  mkdir\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Create a new directory.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    mkdir <directory_name>\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "rmdir") == 0) {
+        printf("%sCommand:%s  rmdir\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Remove an EMPTY directory.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    rmdir <directory_name>\n", COLOR_GREEN, COLOR_RESET);
+        printf("%sWarning:%s  Directory must be empty first!\n", COLOR_RED, COLOR_RESET);
     }
     else {
         printf("Help: No manual entry for '%s'.\n", args[1]);
@@ -366,5 +395,98 @@ int k_shell_calc(char **args) {
     }
 
     printf("%sResult:%s %.2f\n", COLOR_GREEN, COLOR_RESET, result);
+    return 1;
+}
+
+int k_shell_cat(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected filename\n");
+        return 1;
+    }
+
+    FILE *f = fopen(args[1], "r");
+    if (f == NULL) {
+        perror("k-shell");
+        return 1;
+    }
+
+    char buffer[1024];
+
+    while (fgets(buffer, sizeof(buffer), f) != NULL) {
+        printf("%s", buffer);
+    }
+    
+    fclose(f);
+    printf("\n");
+    return 1;
+}
+
+int k_shell_mkdir(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected directory name\n");
+        return 1;
+    }
+
+    if (mkdir(args[1], 0755) != 0) {
+        perror("k-shell");
+    }
+    return 1;
+}
+
+int k_shell_rmdir(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected directory name\n");
+        return 1;
+    }
+
+    if (rmdir(args[1]) != 0) {
+        perror("k-shell");
+    }
+    return 1;
+}
+
+int k_shell_cp(char **args) {
+    if (args[1] == NULL || args[2] == NULL) {
+        fprintf(stderr, "k-shell: usage cp <source> <destination>\n");
+        return 1;
+    }
+
+    FILE *src = fopen(args[1], "rb");
+    if (src == NULL) {
+        perror("k-shell");
+        return 1;
+    }
+
+    FILE *dest = fopen(args[2], "wb");
+    if (dest == NULL) {
+        fclose(src);
+        perror("k-shell");
+        return 1;
+    }
+
+    char buffer[4096];
+    size_t bytes;
+    while ((bytes = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+        fwrite(buffer, 1, bytes, dest);
+    }
+
+    printf("Copied %s to %s\n", args[1], args[2]);
+
+    fclose(src);
+    fclose(dest);
+    return 1;
+}
+
+int k_shell_mv(char **args) {
+    if (args[1] == NULL || args[2] == NULL) {
+        fprintf(stderr, "k-shell: usage mv <source> <destination>\n");
+        return 1;
+    }
+
+    if (rename(args[1], args[2]) != 0) {
+        perror("k-shell");
+    } else {
+        printf("Moved %s to %s\n", args[1], args[2]);
+    }
     return 1;
 }

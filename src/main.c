@@ -84,6 +84,21 @@ int main(void) {
         else if (strcmp(args[0], "calc") == 0) {
             status = k_shell_calc(args);
         }
+        else if (strcmp(args[0], "cat") == 0) {
+            status = k_shell_cat(args);
+        }
+        else if (strcmp(args[0], "cp") == 0) {
+            status = k_shell_cp(args);
+        }
+        else if (strcmp(args[0], "mv") == 0) {
+            status = k_shell_mv(args);
+        }
+        else if (strcmp(args[0], "mkdir") == 0) {
+            status = k_shell_mkdir(args);
+        }
+        else if (strcmp(args[0], "rmdir") == 0) {
+            status = k_shell_rmdir(args);
+        }
         else {
             pid_t pid = fork();
             if (pid == 0) {
