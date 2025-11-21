@@ -12,12 +12,13 @@ Designed to explore core Operating System concepts including process creation, m
 ## 🚀 Features
 
 **Phase 1: The Foundation (Current)**
-* **REPL Interface:** A robust Read-Eval-Print Loop.
-* **Command Parsing:** Tokenizes user input (handling spaces and tabs).
+* **REPL Interface:** A robust Read-Eval-Print Loop handling interactive user input.
 * **Process Execution:** Uses `fork()`, `execvp()`, and `wait()` to run external programs (e.g., `ls`, `grep`, `git`).
-* **Built-in Commands:** Custom implementations of core shell utilities.
-* **Error Handling:** Safe handling of EOF (`Ctrl+D`) and invalid commands.
-* **Visuals:** Colored output and custom ASCII art branding.
+* **Native File Management:** Built-in implementation of `cp`, `mv`, `rm`, `touch`, `mkdir`, and `rmdir` using standard C I/O streams.
+* **Environment Control:** Ability to modify the shell environment dynamically using `export` and `unset`.
+* **Productivity Tools:** Includes `mkcd` (atomic make-and-enter) and a built-in `calc` (arithmetic engine).
+* **Documentation System:** Context-aware help system (e.g., typing `help cd` gives specific usage examples).
+* **Visuals:** Colored ANSI output and custom `kfetch` system branding.
 
 ## 🛠️ Built-in Commands
 
