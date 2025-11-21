@@ -53,7 +53,7 @@ int k_shell_help(char **args) {
         printf("  %-10s %-10s %-10s %-10s\n", "cd", "exit", "help", "clear");
         printf("  %-10s %-10s %-10s %-10s\n", "env", "pwd", "echo", "whoami");
         printf("  %-10s %-10s %-10s %-10s\n", "type", "export", "unset", "mkcd");
-        printf("  %-10s\n", "kfetch");
+        printf("  %-10s %-10s %-10s %-10s\n", "kfetch", "touch", "rm", "calc");
         printf("\n");
         return 1;
     }
@@ -130,6 +130,23 @@ int k_shell_help(char **args) {
         printf("%sCommand:%s  kfetch\n", COLOR_CYAN, COLOR_RESET);
         printf("%sPurpose:%s  Display system information and shell branding.\n", COLOR_YELLOW, COLOR_RESET);
         printf("%sUsage:%s    kfetch\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "touch") == 0) {
+        printf("%sCommand:%s  touch\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Create a new empty file.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    touch <filename>\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "rm") == 0) {
+        printf("%sCommand:%s  rm\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Delete a file permanently.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    rm <filename>\n", COLOR_GREEN, COLOR_RESET);
+        printf("%sWarning:%s  This action cannot be undone!\n", COLOR_RED, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "calc") == 0) {
+        printf("%sCommand:%s  calc\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Perform basic arithmetic operations.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    calc <num1> <operator> <num2>\n", COLOR_GREEN, COLOR_RESET);
+        printf("%sExample:%s  calc 10 + 5\n", COLOR_GREEN, COLOR_RESET);
     }
     else {
         printf("Help: No manual entry for '%s'.\n", args[1]);
@@ -208,7 +225,10 @@ int k_shell_type(char **args) {
         strcmp(args[1], "export") == 0 ||
         strcmp(args[1], "unset") == 0 ||
         strcmp(args[1], "mkcd") == 0 ||
-        strcmp(args[1], "kfetch") == 0) {
+        strcmp(args[1], "kfetch") == 0 ||
+        strcmp(args[1], "touch") == 0 ||
+        strcmp(args[1], "rm") == 0 ||
+        strcmp(args[1], "calc") == 0) {
             printf("%s is a shell builtin\n", args[1]);
     } 
     else {
@@ -285,5 +305,66 @@ int k_shell_kfetch(char **args) {
     printf("%s  K  K   %s   Shell:   %s k-shell v0.1 %s\n", COLOR_RED, COLOR_RESET, COLOR_GREEN, COLOR_RESET);
     printf("%s  K   K  %s   Author:  %s Kedrich %s\n", COLOR_RED, COLOR_RESET, COLOR_YELLOW, COLOR_RESET);
     printf("\n");
+    return 1;
+}
+
+int k_shell_touch(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected filename\n");
+        return 1;
+    }
+
+    FILE *f = fopen(args[1], "a");
+    if (f == NULL) {
+        perror("k-shell");
+    } else {
+        fclose(f);
+    }
+    return 1;
+}
+
+int k_shell_rm(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected filename\n");
+        return 1;
+    }
+
+    if (unlink(args[1]) != 0) {
+        perror("k-shell");
+    } else {
+        printf("Deleted %s\n", args[1]);
+    }
+    return 1;
+}
+
+int k_shell_calc(char **args) {
+    if (args[1] == NULL || args[2] == NULL || args[3] == NULL) {
+        fprintf(stderr, "usage: calc <num1> <op> <num2>\n");
+        return 1;
+    }
+
+    double n1 = atof(args[1]);
+    double n2 = atof(args[3]);
+    char op = args[2][0]; 
+    double result = 0;
+
+    switch (op) {
+        case '+': result = n1 + n2; break;
+        case '-': result = n1 - n2; break;
+        case '*': 
+        case 'x': result = n1 * n2; break;
+        case '/': 
+            if (n2 == 0) {
+                fprintf(stderr, "k-shell: cannot divide by zero\n");
+                return 1;
+            }
+            result = n1 / n2; 
+            break;
+        default:
+            fprintf(stderr, "k-shell: unknown operator '%c'\n", op);
+            return 1;
+    }
+
+    printf("%sResult:%s %.2f\n", COLOR_GREEN, COLOR_RESET, result);
     return 1;
 }

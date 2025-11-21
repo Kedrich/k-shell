@@ -75,6 +75,15 @@ int main(void) {
         else if (strcmp(args[0], "kfetch") == 0) {
             status = k_shell_kfetch(args);
         }
+        else if (strcmp(args[0], "touch") == 0) {
+            status = k_shell_touch(args);
+        }
+        else if (strcmp(args[0], "rm") == 0) {
+            status = k_shell_rm(args);
+        }
+        else if (strcmp(args[0], "calc") == 0) {
+            status = k_shell_calc(args);
+        }
         else {
             pid_t pid = fork();
             if (pid == 0) {

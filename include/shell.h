@@ -15,5 +15,8 @@ int k_shell_export(char **args);
 int k_shell_unset(char **args);
 int k_shell_mkcd(char **args);
 int k_shell_kfetch(char **args);
+int k_shell_touch(char **args);
+int k_shell_rm(char **args);
+int k_shell_calc(char **args);
 
 #endif
