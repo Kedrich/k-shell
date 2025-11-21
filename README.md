@@ -21,21 +21,42 @@ Designed to explore core Operating System concepts including process creation, m
 
 ## 🛠️ Built-in Commands
 
+### Core & Navigation
 | Command | Description |
 | :--- | :--- |
 | `cd <dir>` | Change the current working directory. |
 | `mkcd <dir>` | Create a directory and immediately enter it. |
-| `help [cmd]` | Display the user guide or specific command manual. |
-| `exit` | Terminate the shell session safely. |
-| `clear` | Clear the terminal screen and scrollback. |
 | `pwd` | Print the current working directory. |
+| `exit` | Terminate the shell session safely. |
+| `help [cmd]` | Display the user guide or specific command manual. |
+
+### File Management
+| Command | Description |
+| :--- | :--- |
+| `touch <file>` | Create a new empty file or update timestamp. |
+| `rm <file>` | Delete a file permanently. |
+| `mkdir <dir>` | Create a new directory. |
+| `rmdir <dir>` | Remove an empty directory. |
+| `cat <file>` | Display file contents to the terminal. |
+| `cp <src> <dst>` | Copy a file from source to destination. |
+| `mv <src> <dst>` | Move or rename a file. |
+
+### Utilities & System
+| Command | Description |
+| :--- | :--- |
+| `clear` | Clear the terminal screen and scrollback. |
 | `whoami` | Display the current username. |
-| `type <cmd>` | Identify if a command is a built-in or external executable. |
 | `echo <text>` | Print text to the standard output. |
+| `type <cmd>` | Identify if a command is a built-in or external executable. |
+| `calc <expr>` | Perform basic arithmetic (e.g., `calc 10 + 5`). |
+| `kfetch` | Display system information and shell branding. |
+
+### Environment
+| Command | Description |
+| :--- | :--- |
 | `env` | Print all environment variables. |
 | `export <k=v>` | Create or update an environment variable. |
 | `unset <key>` | Remove an environment variable. |
-| `kfetch` | Display system information and shell branding. |
 
 ## ⚙️ Installation & Usage
 
