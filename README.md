@@ -24,7 +24,8 @@ Designed to explore core Operating System concepts including process creation, m
 | Command | Description |
 | :--- | :--- |
 | `cd <dir>` | Change the current working directory. |
-| `help` | Display the user guide and available commands. |
+| `mkcd <dir>` | Create a directory and immediately enter it. |
+| `help [cmd]` | Display the user guide or specific command manual. |
 | `exit` | Terminate the shell session safely. |
 | `clear` | Clear the terminal screen and scrollback. |
 | `pwd` | Print the current working directory. |
@@ -32,6 +33,9 @@ Designed to explore core Operating System concepts including process creation, m
 | `type <cmd>` | Identify if a command is a built-in or external executable. |
 | `echo <text>` | Print text to the standard output. |
 | `env` | Print all environment variables. |
+| `export <k=v>` | Create or update an environment variable. |
+| `unset <key>` | Remove an environment variable. |
+| `kfetch` | Display system information and shell branding. |
 
 ## ⚙️ Installation & Usage
 
