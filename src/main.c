@@ -63,6 +63,18 @@ int main(void) {
         else if (strcmp(args[0], "type") == 0) {
             status = k_shell_type(args);
         }
+        else if (strcmp(args[0], "export") == 0) {
+            status = k_shell_export(args);
+        }
+        else if (strcmp(args[0], "unset") == 0) {
+            status = k_shell_unset(args);
+        }
+        else if (strcmp(args[0], "mkcd") == 0) {
+            status = k_shell_mkcd(args);
+        }
+        else if (strcmp(args[0], "kfetch") == 0) {
+            status = k_shell_kfetch(args);
+        }
         else {
             pid_t pid = fork();
             if (pid == 0) {

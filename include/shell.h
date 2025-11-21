@@ -11,5 +11,9 @@ int k_shell_pwd(char **args);
 int k_shell_echo(char **args);
 int k_shell_whoami(char **args);
 int k_shell_type(char **args);
+int k_shell_export(char **args);
+int k_shell_unset(char **args);
+int k_shell_mkcd(char **args);
+int k_shell_kfetch(char **args);
 
 #endif
