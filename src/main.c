@@ -99,6 +99,18 @@ int main(void) {
         else if (strcmp(args[0], "rmdir") == 0) {
             status = k_shell_rmdir(args);
         }
+        else if (strcmp(args[0], "date") == 0) {
+            status = k_shell_date(args);
+        }
+        else if (strcmp(args[0], "hostname") == 0) {
+            status = k_shell_hostname(args);
+        }
+        else if (strcmp(args[0], "uptime") == 0) {
+            status = k_shell_uptime(args);
+        }
+        else if (strcmp(args[0], "sleep") == 0) {
+            status = k_shell_sleep(args);
+        }
         else {
             pid_t pid = fork();
             if (pid == 0) {

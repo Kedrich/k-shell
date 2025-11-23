@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/utsname.h>
 #include "../include/shell.h"
+#include <time.h>
 
 #define COLOR_RESET   "\033[0m"
 #define COLOR_CYAN    "\033[1;36m"
@@ -55,6 +56,7 @@ int k_shell_help(char **args) {
         printf("  %-10s %-10s %-10s %-10s\n", "type", "export", "unset", "mkcd");
         printf("  %-10s %-10s %-10s %-10s\n", "kfetch", "touch", "rm", "rmdir");
         printf("  %-10s %-10s %-10s %-10s\n", "cat", "cp", "mv", "mkdir");
+        printf("  %-10s %-10s %-10s %-10s\n", "date", "uptime", "hostname", "sleep");
         printf("  %-10s", "calc");
         printf("\n");
         return 1;
@@ -177,6 +179,27 @@ int k_shell_help(char **args) {
         printf("%sUsage:%s    rmdir <directory_name>\n", COLOR_GREEN, COLOR_RESET);
         printf("%sWarning:%s  Directory must be empty first!\n", COLOR_RED, COLOR_RESET);
     }
+    else if (strcmp(args[1], "date") == 0) {
+        printf("%sCommand:%s  date\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Display the current system date and time.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    date\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "uptime") == 0) {
+        printf("%sCommand:%s  uptime\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Show how long the system has been running.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    uptime\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "hostname") == 0) {
+        printf("%sCommand:%s  hostname\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Show the network name of this computer.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    hostname\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "sleep") == 0) {
+        printf("%sCommand:%s  sleep\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Pause the shell for a set amount of seconds.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    sleep <seconds>\n", COLOR_GREEN, COLOR_RESET);
+        printf("%sExample:%s  sleep 5\n", COLOR_GREEN, COLOR_RESET);
+    }
     else {
         printf("Help: No manual entry for '%s'.\n", args[1]);
     }
@@ -257,7 +280,11 @@ int k_shell_type(char **args) {
         strcmp(args[1], "kfetch") == 0 ||
         strcmp(args[1], "touch") == 0 ||
         strcmp(args[1], "rm") == 0 ||
-        strcmp(args[1], "calc") == 0) {
+        strcmp(args[1], "calc") == 0 ||
+        strcmp(args[1], "date") == 0 ||
+        strcmp(args[1], "hostname") == 0 ||
+        strcmp(args[1], "uptime") == 0 ||
+        strcmp(args[1], "sleep") == 0) {
             printf("%s is a shell builtin\n", args[1]);
     } 
     else {
@@ -488,5 +515,60 @@ int k_shell_mv(char **args) {
     } else {
         printf("Moved %s to %s\n", args[1], args[2]);
     }
+    return 1;
+}
+
+int k_shell_date(char **args) {
+    time_t t = time(NULL);
+    struct tm *tm_info = localtime(&t);
+    
+    char buffer[26];
+    strftime(buffer, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+    
+    printf("%s\n", buffer);
+    return 1;
+}
+
+int k_shell_hostname(char **args) {
+    char hostname[1024];
+    if (gethostname(hostname, sizeof(hostname)) == 0) {
+        printf("%s\n", hostname);
+    } else {
+        perror("k-shell");
+    }
+    return 1;
+}
+
+int k_shell_sleep(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected time in seconds\n");
+        return 1;
+    }
+    
+    int seconds = atoi(args[1]);
+    if (seconds > 0) {
+        sleep(seconds);
+    }
+    return 1;
+}
+
+int k_shell_uptime(char **args) {
+    FILE *f = fopen("/proc/uptime", "r");
+    if (f == NULL) {
+        perror("k-shell");
+        return 1;
+    }
+
+    double uptime_seconds;
+    if (fscanf(f, "%lf", &uptime_seconds) == 1) {
+        // Convert seconds to readable format
+        int hours = (int)uptime_seconds / 3600;
+        int minutes = ((int)uptime_seconds % 3600) / 60;
+        int seconds = (int)uptime_seconds % 60;
+
+        printf("System Uptime: %d hours, %d minutes, %d seconds\n", hours, minutes, seconds);
+    }
+    
+    fclose(f);
     return 1;
 }

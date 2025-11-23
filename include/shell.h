@@ -23,5 +23,9 @@ int k_shell_cp(char **args);
 int k_shell_mv(char **args);
 int k_shell_mkdir(char **args);
 int k_shell_rmdir(char **args);
+int k_shell_date(char **args);
+int k_shell_uptime(char **args);
+int k_shell_hostname(char **args);
+int k_shell_sleep(char **args);
 
 #endif
