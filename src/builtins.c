@@ -6,6 +6,7 @@
 #include <sys/utsname.h>
 #include "../include/shell.h"
 #include <time.h>
+#include <ctype.h>
 
 #define COLOR_RESET   "\033[0m"
 #define COLOR_CYAN    "\033[1;36m"
@@ -57,7 +58,7 @@ int k_shell_help(char **args) {
         printf("  %-10s %-10s %-10s %-10s\n", "kfetch", "touch", "rm", "rmdir");
         printf("  %-10s %-10s %-10s %-10s\n", "cat", "cp", "mv", "mkdir");
         printf("  %-10s %-10s %-10s %-10s\n", "date", "uptime", "hostname", "sleep");
-        printf("  %-10s", "calc");
+        printf("  %-10s %-10s %-10s %-10s\n", "calc", "head", "wc", "rev");
         printf("\n");
         return 1;
     }
@@ -199,6 +200,22 @@ int k_shell_help(char **args) {
         printf("%sPurpose:%s  Pause the shell for a set amount of seconds.\n", COLOR_YELLOW, COLOR_RESET);
         printf("%sUsage:%s    sleep <seconds>\n", COLOR_GREEN, COLOR_RESET);
         printf("%sExample:%s  sleep 5\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "head") == 0) {
+        printf("%sCommand:%s  head\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Print the first N lines of a file (default 5).\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    head <filename> [n]\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "wc") == 0) {
+        printf("%sCommand:%s  wc\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Count lines, words, and bytes in a file.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    wc <filename>\n", COLOR_GREEN, COLOR_RESET);
+    }
+    else if (strcmp(args[1], "rev") == 0) {
+        printf("%sCommand:%s  rev\n", COLOR_CYAN, COLOR_RESET);
+        printf("%sPurpose:%s  Reverse the text provided.\n", COLOR_YELLOW, COLOR_RESET);
+        printf("%sUsage:%s    rev <text>\n", COLOR_GREEN, COLOR_RESET);
+        printf("%sExample:%s  rev hello -> olleh\n", COLOR_GREEN, COLOR_RESET);
     }
     else {
         printf("Help: No manual entry for '%s'.\n", args[1]);
@@ -561,7 +578,6 @@ int k_shell_uptime(char **args) {
 
     double uptime_seconds;
     if (fscanf(f, "%lf", &uptime_seconds) == 1) {
-        // Convert seconds to readable format
         int hours = (int)uptime_seconds / 3600;
         int minutes = ((int)uptime_seconds % 3600) / 60;
         int seconds = (int)uptime_seconds % 60;
@@ -570,5 +586,92 @@ int k_shell_uptime(char **args) {
     }
     
     fclose(f);
+    return 1;
+}
+
+int k_shell_head(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected filename\n");
+        return 1;
+    }
+
+    FILE *f = fopen(args[1], "r");
+    if (f == NULL) {
+        perror("k-shell");
+        return 1;
+    }
+
+    int lines_to_print = 5;
+    if (args[2] != NULL) {
+        lines_to_print = atoi(args[2]);
+    }
+
+    char buffer[1024];
+    int count = 0;
+    while (count < lines_to_print && fgets(buffer, sizeof(buffer), f) != NULL) {
+        printf("%s", buffer);
+        count++;
+    }
+
+    fclose(f);
+    return 1;
+}
+
+int k_shell_wc(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected filename\n");
+        return 1;
+    }
+
+    FILE *f = fopen(args[1], "r");
+    if (f == NULL) {
+        perror("k-shell");
+        return 1;
+    }
+
+    int lines = 0;
+    int words = 0;
+    int bytes = 0;
+    int in_word = 0;
+    int c;
+
+    while ((c = fgetc(f)) != EOF) {
+        bytes++;
+
+        if (c == '\n') {
+            lines++;
+        }
+
+        if (isspace(c)) {
+            in_word = 0;
+        } else if (in_word == 0) {
+            in_word = 1;
+            words++;
+        }
+    }
+
+    printf("Lines: %d | Words: %d | Bytes: %d | File: %s\n", lines, words, bytes, args[1]);
+    fclose(f);
+    return 1;
+}
+
+int k_shell_rev(char **args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "k-shell: expected text to reverse\n");
+        return 1;
+    }
+
+    int i = 1;
+    while (args[i] != NULL) {
+        char *str = args[i];
+        int len = strlen(str);
+
+        for (int j = len - 1; j >= 0; j--) {
+            printf("%c", str[j]);
+        }
+        printf(" ");
+        i++;
+    }
+    printf("\n");
     return 1;
 }

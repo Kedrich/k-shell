@@ -111,6 +111,15 @@ int main(void) {
         else if (strcmp(args[0], "sleep") == 0) {
             status = k_shell_sleep(args);
         }
+        else if (strcmp(args[0], "head") == 0) {
+            status = k_shell_head(args);
+        }
+        else if (strcmp(args[0], "wc") == 0) {
+            status = k_shell_wc(args);
+        }
+        else if (strcmp(args[0], "rev") == 0) {
+            status = k_shell_rev(args);
+        }
         else {
             pid_t pid = fork();
             if (pid == 0) {

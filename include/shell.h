@@ -27,5 +27,8 @@ int k_shell_date(char **args);
 int k_shell_uptime(char **args);
 int k_shell_hostname(char **args);
 int k_shell_sleep(char **args);
+int k_shell_head(char **args);
+int k_shell_wc(char **args);
+int k_shell_rev(char **args);
 
 #endif
