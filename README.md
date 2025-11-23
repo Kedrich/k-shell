@@ -15,6 +15,8 @@ Designed to explore core Operating System concepts including process creation, m
 * **REPL Interface:** A robust Read-Eval-Print Loop handling interactive user input.
 * **Process Execution:** Uses `fork()`, `execvp()`, and `wait()` to run external programs (e.g., `ls`, `grep`, `git`).
 * **Native File Management:** Built-in implementation of `cp`, `mv`, `rm`, `touch`, `mkdir`, and `rmdir` using standard C I/O streams.
+* **System Diagnostics:** Built-in tools to check system time, uptime, and network identity (`date`, `uptime`, `hostname`).
+* **Text Processing:** Native string and file analysis tools (`head`, `wc`, `rev`).
 * **Environment Control:** Ability to modify the shell environment dynamically using `export` and `unset`.
 * **Productivity Tools:** Includes `mkcd` (atomic make-and-enter) and a built-in `calc` (arithmetic engine).
 * **Documentation System:** Context-aware help system (e.g., typing `help cd` gives specific usage examples).
@@ -42,22 +44,33 @@ Designed to explore core Operating System concepts including process creation, m
 | `cp <src> <dst>` | Copy a file from source to destination. |
 | `mv <src> <dst>` | Move or rename a file. |
 
-### Utilities & System
+### System & Time
 | Command | Description |
 | :--- | :--- |
-| `clear` | Clear the terminal screen and scrollback. |
-| `whoami` | Display the current username. |
-| `echo <text>` | Print text to the standard output. |
-| `type <cmd>` | Identify if a command is a built-in or external executable. |
-| `calc <expr>` | Perform basic arithmetic (e.g., `calc 10 + 5`). |
+| `date` | Display the current date and time. |
+| `uptime` | Show how long the system has been running. |
+| `hostname` | Display the network name of the computer. |
+| `sleep <sec>` | Pause the shell for a specific number of seconds. |
 | `kfetch` | Display system information and shell branding. |
 
-### Environment
+### Text Tools
+| Command | Description |
+| :--- | :--- |
+| `head <file> [n]` | Print the first N lines of a file (default 5). |
+| `wc <file>` | Count lines, words, and bytes in a file. |
+| `rev <text>` | Reverse a string (e.g., `hello` -> `olleh`). |
+| `echo <text>` | Print text to the standard output. |
+
+### Environment & Misc
 | Command | Description |
 | :--- | :--- |
 | `env` | Print all environment variables. |
 | `export <k=v>` | Create or update an environment variable. |
 | `unset <key>` | Remove an environment variable. |
+| `whoami` | Display the current username. |
+| `type <cmd>` | Identify if a command is a built-in or external executable. |
+| `calc <expr>` | Perform basic arithmetic (e.g., `calc 10 + 5`). |
+| `clear` | Clear the terminal screen and scrollback. |
 
 ## ⚙️ Installation & Usage
 
